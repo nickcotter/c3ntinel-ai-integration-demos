@@ -11,6 +11,19 @@ TODO
 
 # Deployment
 
+## Creating Lambda Zip
+
+~~~~
+mkdir package
+pip install -r requirements.txt -t package/
+cp lambda_function.py package/
+cd package
+zip -r ../function.zip .
+cd ..
+~~~~
+
+## Uploading?
+
 ~~~~
 aws cloudformation deploy \
   --template-file meter-photo-processor.yaml \
