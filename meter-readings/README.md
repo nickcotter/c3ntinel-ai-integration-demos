@@ -51,3 +51,16 @@ aws cloudformation deploy \
 ~~~~
 
 ## Attaching Notifications
+
+~~~~
+aws s3api put-bucket-notification-configuration \
+  --bucket your-photo-bucket \
+  --notification-configuration '{
+    "LambdaFunctionConfigurations": [
+      {
+        "LambdaFunctionArn": "arn:aws:lambda:REGION:ACCOUNT_ID:function:LAMBDA_NAME",
+        "Events": ["s3:ObjectCreated:*"]
+      }
+    ]
+  }'
+~~~~
