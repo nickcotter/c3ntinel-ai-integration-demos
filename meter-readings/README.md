@@ -22,12 +22,18 @@ zip -r ../function.zip .
 cd ..
 ~~~~
 
-## Uploading?
+## Uploading Lambda Zip
+
+> aws s3 cp function.zip s3://your-deployment-bucket/lambda/function.zip
+
+## Creating The Stack
 
 ~~~~
 aws cloudformation deploy \
   --template-file meter-photo-processor.yaml \
   --stack-name meter-demo \
-  --parameter-overrides LambdaS3Key=lambda/meter-reader.zip LambdaS3Bucket=your-bucket-name \
+  --parameter-overrides \
+      LambdaS3Key=lambda/function.zip \
+      LambdaS3Bucket=your-deployment-bucket \
   --capabilities CAPABILITY_NAMED_IAM
 ~~~~
