@@ -44,44 +44,44 @@ Resources:
           METER_API_URL: "<replace-me>"
       Role: !GetAtt LambdaExecutionRole.Arn
   
-    LambdaInvokePermission:
-      Type: AWS::Lambda::Permission
-      Properties:
-        FunctionName: !Ref MeterProcessorLambda
-        Action: "lambda:InvokeFunction"
-        Principal: "s3.amazonaws.com"
-        SourceArn: !GetAtt MeterPhotoBucket.Arn
-  
-    LambdaExecutionRole:
-      Type: AWS::IAM::Role
-      Properties:
-        RoleName: !Sub "${AWS::StackName}-lambda-role"
-        AssumeRolePolicyDocument:
-          Version: "2012-10-17"
-          Statement:
-            - Effect: "Allow"
-              Principal:
-                Service: "lambda.amazonaws.com"
-              Action: "sts:AssumeRole"
-        Policies:
-          - PolicyName: LambdaExecutionPolicy
-            PolicyDocument:
-              Version: "2012-10-17"
-              Statement:
-                - Effect: "Allow"
-                  Action:
-                    - "logs:CreateLogGroup"
-                    - "logs:CreateLogStream"
-                    - "logs:PutLogEvents"
-                  Resource: "*"
-                - Effect: "Allow"
-                  Action:
-                    - "s3:GetObject"
-                  Resource: !Sub "${MeterPhotoBucket.Arn}/*"
-                - Effect: "Allow"
-                  Action:
-                    - "secretsmanager:GetSecretValue"
-                  Resource: "*"  # Restrict to specific secrets in production
+  LambdaInvokePermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName: !Ref MeterProcessorLambda
+      Action: "lambda:InvokeFunction"
+      Principal: "s3.amazonaws.com"
+      SourceArn: !GetAtt MeterPhotoBucket.Arn
+
+  LambdaExecutionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: !Sub "${AWS::StackName}-lambda-role"
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: "Allow"
+            Principal:
+              Service: "lambda.amazonaws.com"
+            Action: "sts:AssumeRole"
+      Policies:
+        - PolicyName: LambdaExecutionPolicy
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: "Allow"
+                Action:
+                  - "logs:CreateLogGroup"
+                  - "logs:CreateLogStream"
+                  - "logs:PutLogEvents"
+                Resource: "*"
+              - Effect: "Allow"
+                Action:
+                  - "s3:GetObject"
+                Resource: !Sub "${MeterPhotoBucket.Arn}/*"
+              - Effect: "Allow"
+                Action:
+                  - "secretsmanager:GetSecretValue"
+                Resource: "*"  # Restrict to specific secrets in production
 
 Outputs:
   BucketName:
