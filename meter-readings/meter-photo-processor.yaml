@@ -12,13 +12,17 @@ Parameters:
 Resources:
 
   MeterPhotoBucket:
-    Type: AWS::S3::Bucket
-    Properties:
-      BucketName: !Sub "${AWS::StackName}-meter-photos"
-      NotificationConfiguration:
-        LambdaConfigurations:
-          - Event: "s3:ObjectCreated:*"
-            Function: !GetAtt MeterProcessorLambda.Arn
+  Type: AWS::S3::Bucket
+  Properties:
+    BucketName: !Sub "${AWS::StackName}-meter-photos"
+    BucketEncryption:
+      ServerSideEncryptionConfiguration:
+        - ServerSideEncryptionByDefault:
+            SSEAlgorithm: AES256
+    NotificationConfiguration:
+      LambdaConfigurations:
+        - Event: "s3:ObjectCreated:*"
+          Function: !GetAtt MeterProcessorLambda.Arn
 
   MeterProcessorLambda:
     Type: AWS::Lambda::Function
