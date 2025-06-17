@@ -19,10 +19,6 @@ Resources:
         ServerSideEncryptionConfiguration:
           - ServerSideEncryptionByDefault:
               SSEAlgorithm: AES256
-      NotificationConfiguration:
-        LambdaConfigurations:
-          - Event: "s3:ObjectCreated:*"
-            Function: !GetAtt MeterProcessorLambda.Arn
   
   MeterProcessorLambda:
     Type: AWS::Lambda::Function
@@ -43,14 +39,24 @@ Resources:
           OAUTH_TOKEN_URL: "<replace-me>"
           METER_API_URL: "<replace-me>"
       Role: !GetAtt LambdaExecutionRole.Arn
-  
+    
   LambdaInvokePermission:
     Type: AWS::Lambda::Permission
     Properties:
-      FunctionName: !Ref MeterProcessorLambda
+      FunctionName: !GetAtt MeterProcessorLambda.Arn
       Action: "lambda:InvokeFunction"
       Principal: "s3.amazonaws.com"
       SourceArn: !GetAtt MeterPhotoBucket.Arn
+      
+  MeterPhotoBucketNotification:
+    Type: AWS::S3::BucketNotification
+    DependsOn: LambdaInvokePermission
+    Properties:
+      Bucket: !Ref MeterPhotoBucket
+      NotificationConfiguration:
+        LambdaConfigurations:
+          - Event: "s3:ObjectCreated:*"
+            Function: !GetAtt MeterProcessorLambda.Arn
 
   LambdaExecutionRole:
     Type: AWS::IAM::Role
