@@ -22,18 +22,23 @@ zip -r ../function.zip .
 cd ..
 ~~~~
 
+TODO github actions
+
 ## Uploading Lambda Zip
 
-> aws s3 cp function.zip s3://your-deployment-bucket/lambda/function.zip
+Create a bucket for deployments - eg c3ntinel-ai-experimental-lambdas
+
+> aws s3 cp function.zip s3://c3ntinel-ai-experimental-lambdas/lambda/meter-photo-processor-function.zip
+
 
 ## Creating The Stack
 
 ~~~~
 aws cloudformation deploy \
   --template-file meter-photo-processor.yaml \
-  --stack-name meter-demo \
+  --stack-name meter-photo-processor-demo \
   --parameter-overrides \
-      LambdaS3Key=lambda/function.zip \
-      LambdaS3Bucket=your-deployment-bucket \
+      LambdaS3Key=lambda/meter-photo-processor-function.zip \
+      LambdaS3Bucket=c3ntinel-ai-experimental-lambdas \
   --capabilities CAPABILITY_NAMED_IAM
 ~~~~
